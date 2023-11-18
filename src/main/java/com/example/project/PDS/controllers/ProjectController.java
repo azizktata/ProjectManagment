@@ -9,8 +9,15 @@ import com.example.project.PDS.services.ProjectService;
 import com.example.project.PDS.services.StagesService;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.AllArgsConstructor;
+import org.springframework.core.io.ByteArrayResource;
+import org.springframework.core.io.Resource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
 @AllArgsConstructor
@@ -51,16 +58,21 @@ public class ProjectController {
 
     //Add a document
     @Operation(summary = "Upload specification book PDF")
-    @PostMapping(value ="/{projectId}/document/spec")
-    public String uploadSpec(@PathVariable String projectId) {return projectService.uploadSpec(projectId);}
+    @PostMapping(value ="/{projectId}/document")
+    public String uploadDoc(@PathVariable String projectId, @RequestParam("pdf") MultipartFile pdf) throws IOException {return projectService.uploadDoc(projectId,pdf.getOriginalFilename(),pdf);}
 
-    @Operation(summary = "Upload Class Diagram PDF")
-    @PostMapping(value ="/{projectId}/document/classD")
-    public String uploadClassDiagram(@PathVariable String projectId) {return projectService.uploadClassD(projectId);}
+    @Operation(summary = "download specification book PDF")
+    @GetMapping(value ="/{projectId}/document")
+    public ResponseEntity<Resource> downloadDoc(@PathVariable String projectId) throws IOException {
+        Doccument document = projectService.getDocument(projectId);
+        Resource resoure = new ByteArrayResource(document.getDoc().getData());
 
-    @Operation(summary = "Upload use case PDF")
-    @PostMapping(value ="/{projectId}/document/useCase")
-    public String uploadUseCaseDiagram(@PathVariable String projectId) {return projectService.uploadUseCaseD(projectId);}
+        return ResponseEntity.ok()
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment: filename\""+ document.getTitle() + "\"")
+                .contentType(MediaType.APPLICATION_OCTET_STREAM)
+                .body(resoure);
+
+    }
 
     // add specification file
     // add Class diagram file

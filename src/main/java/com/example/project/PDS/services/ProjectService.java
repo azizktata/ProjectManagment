@@ -4,9 +4,15 @@ import com.example.project.PDS.DTO.projectDTO;
 import com.example.project.PDS.models.*;
 import com.example.project.PDS.repository.ProjectRepo;
 import com.example.project.PDS.repository.SupervisorRepo;
+import jakarta.annotation.Resource;
 import lombok.AllArgsConstructor;
+import org.bson.BsonBinarySubType;
+import org.bson.types.Binary;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Set;
 
@@ -78,17 +84,25 @@ public class ProjectService {
         return stagesService.getCommentByStage(stageId);
     }
 
-    public String uploadSpec(String projectId) {
-        return "uploaded spec";
+    public String uploadDoc(String projectId, String pdfName, MultipartFile pdf) throws IOException {
+        Project project = projectRepo.findById(projectId)
+                .orElseThrow(() -> new RuntimeException("Project not found"));
+        Doccument document = new Doccument();
+        document.setTitle(pdfName);
+        document.setDoc(new Binary(BsonBinarySubType.BINARY, pdf.getBytes()));
+
+        project.setDocument(document);
+        projectRepo.save(project);
+        return document.getId();
     }
 
-    public String uploadClassD(String projectId) {
-        return "uploaded Class Diagram";
+    public Doccument getDocument (String projectId){
+        Project project = projectRepo.findById(projectId)
+                .orElseThrow(() -> new RuntimeException("Project not found"));
+        return project.getDocument();
     }
 
-    public String uploadUseCaseD(String projectId) {
-        return "uploaded Use Case Diagram";
-    }
+
 
 
     //update a project

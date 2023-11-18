@@ -1,5 +1,6 @@
 package com.example.project.PDS.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -26,12 +27,13 @@ public class Project {
     private String timeline;
     private Doccument document;
 
-    @DBRef
+    @DBRef(lazy = false)
+    @JsonIgnore
     private Supervisor supervisorId; // Reference to Supervisor
 
     private Team team;
 
-    @DBRef
+    @DBRef (lazy = false)
     private List<Stage> stages;
 
     public Project(String title, String description, String timeline, Team team) {

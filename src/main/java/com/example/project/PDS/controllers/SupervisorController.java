@@ -1,47 +1,61 @@
 package com.example.project.PDS.controllers;
 
+import com.example.project.PDS.DTO.commentDTO;
 import com.example.project.PDS.DTO.projectDTO;
 import com.example.project.PDS.DTO.userDTO;
-import com.example.project.PDS.models.Stage;
-import com.example.project.PDS.models.Student;
-import com.example.project.PDS.models.Supervisor;
+import com.example.project.PDS.models.*;
 import com.example.project.PDS.services.SupervisorService;
+import io.swagger.v3.oas.annotations.Operation;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @AllArgsConstructor
-@RestController(value = "/api/v1/supervisors")
+@RestController
+@RequestMapping(value = "api/v1/supervisors")
 public class SupervisorController {
     private final SupervisorService supervisorService;
 
+    @Operation(summary = "Get All Supervisors")
     @GetMapping()
     public List<Supervisor> getAllSupervisors(){return supervisorService.getAllSupervisor();}
 
+    @Operation(summary = "Get Supervisor By Id")
     @GetMapping(value ="/{Id}")
     public Supervisor getSupervisor(@PathVariable String Id){return supervisorService.getSupervisor(Id);}
 
+    @Operation(summary = "Add Supervisor")
     @PostMapping()
     public String addSupervisor(@RequestBody userDTO userDto){return supervisorService.createSupervisor(userDto);}
 
+    @Operation(summary = "Delete Supervisor By Id")
     @DeleteMapping(value ="/{Id}")
     public String removeSupervisor(@PathVariable String Id){return supervisorService.deleteSupervisor(Id);}
 
     //create project
-    @PostMapping(value ="/{Id}")
+    @Operation(summary = "Add Project")
+    @PostMapping(value ="/{Id}/projects")
     public String addProject(@PathVariable String Id,@RequestBody projectDTO projectDto){return supervisorService.AddProject(Id,projectDto);}
 
     // add comment to stage /only a supervisor can add comment
+    @Operation(summary = "Add comment to stage")
     @PostMapping(value ="/stages/{stageId}/comments")
-    public Stage addComment(@PathVariable String stageId, @RequestBody String comment){return supervisorService.addComment(stageId,comment);}
+    public Stage addComment(@PathVariable String stageId, @RequestBody commentDTO commentDto){return supervisorService.addComment(stageId,commentDto);}
+
+    // Delete comment
+    @Operation(summary = "Delete comment with Id")
+    @DeleteMapping(value ="/stages/{stageId}/comments/{commentId}")
+    public String removeComment(@PathVariable String stageId, @PathVariable String commentId){return supervisorService.removeComment(stageId,commentId);}
 
     // view his teams
+    @Operation(summary = "View My teams")
+    @GetMapping(value ="/{Id}/teams")
+    public List<Team> getSupervisorTeams(@PathVariable String Id){return supervisorService.getMyTeams(Id);}
 
     // view his projects
-
-    // view stages-tasks by project
-
-
+    @Operation(summary = "View My Projects")
+    @GetMapping(value ="/{Id}/projects")
+    public List<Project> getSupervisorProjects(@PathVariable String Id){return supervisorService.getMyProjects(Id);}
 
 }

@@ -1,5 +1,6 @@
 package com.example.project.PDS.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -25,9 +26,10 @@ public class Stage {
 
     private List<Task> tasks;
 
-    private List<String> comments;
+    private List<Comment> comments;
 
-    @DBRef
+    @DBRef(lazy = false)
+    @JsonIgnore
     private Project project;
 
     public Stage(String name) {
@@ -39,7 +41,44 @@ public class Stage {
     public void addTask(Task task){
         tasks.add(task);
     }
-    public void addComments(String comment){
+
+    public boolean checkTask(String title){
+        for(Task task : this.tasks){
+            if (task.getTitle().equals(title))
+                    return true;
+        }
+        return false;
+    }
+
+    public void removeTask(String title){
+        this.tasks.removeIf(task -> task.getTitle().equals(title));
+    }
+
+    public boolean checkTaskId(String Id){
+        for(Task task : this.tasks){
+            if (task.getId().equals(Id))
+                return true;
+        }
+        return false;
+    }
+    public void removeTaskById(String Id){
+        this.tasks.removeIf(task -> task.getId().equals(Id));
+    }
+
+
+    public void addComments(Comment comment){
         comments.add(comment);
+    }
+
+    public boolean checkCommentId(String commentId) {
+        for(Comment comment : this.comments){
+            if (comment.getId().equals(commentId))
+                return true;
+        }
+        return false;
+    }
+
+    public void removeCommentById(String commentId) {
+        this.comments.removeIf(task -> task.getId().equals(commentId));
     }
 }

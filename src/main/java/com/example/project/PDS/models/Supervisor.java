@@ -23,7 +23,7 @@ public class Supervisor {
     private String name;
     private String email;
 
-    @DBRef
+    @DBRef(lazy = false)
     private List<Project> projects;
 
 

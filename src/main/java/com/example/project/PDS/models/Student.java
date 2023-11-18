@@ -1,5 +1,6 @@
 package com.example.project.PDS.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -19,14 +20,20 @@ public class Student {
     private String name;
     private String email;
 
-    @DBRef
+    @DBRef(lazy = false)
     private Project project;
 
+    @JsonIgnore
     private Team team;
 
 
     public Student(String name, String email) {
         this.name = name;
         this.email = email;
+    }
+
+    public void getOutTeam (){
+        this.team = new Team();
+        this.project = new Project();
     }
 }

@@ -17,8 +17,7 @@ import java.util.Set;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Team {
-    @Id
-    private String id;
+
     private String name;
 
 //    @DBRef
@@ -28,5 +27,9 @@ public class Team {
 
     public Team(String name) {
         this.name = name;
+    }
+
+    public void removeMember(String email){
+        this.members.removeIf(member -> member.getEmail().equals(email));
     }
 }

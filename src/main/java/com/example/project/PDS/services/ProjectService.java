@@ -15,6 +15,7 @@ import java.util.Set;
 public class ProjectService {
     private ProjectRepo projectRepo;
     private final SupervisorRepo supervisorRepo;
+    private final StagesService stagesService;
 
     //Create a project
     public String createProject(projectDTO projectDto, String supervisorId){
@@ -49,7 +50,8 @@ public class ProjectService {
 
     // View Project
     public Project getProject(String Id){
-        return projectRepo.findById(Id).get();
+        return projectRepo.findById(Id)
+                .orElseThrow(() -> new RuntimeException("Project not found"));
     }
 
     public List<Project> getAllProjects(){
@@ -59,6 +61,33 @@ public class ProjectService {
     // View Project stages
     public List<Stage> getProjectStages(String Id){
         return projectRepo.findById(Id).get().getStages();
+    }
+
+    public List<Stage> getStageByProject(String projectId) {
+        Project project = projectRepo.findById(projectId)
+                .orElseThrow(() -> new RuntimeException("Project not found"));
+        return project.getStages();
+    }
+
+    public List<Task> getTasksByStage(String stageId) {
+        return stagesService.getTaskByStage(stageId);
+
+    }
+
+    public List<Comment> getCommentsByStage(String stageId) {
+        return stagesService.getCommentByStage(stageId);
+    }
+
+    public String uploadSpec(String projectId) {
+        return "uploaded spec";
+    }
+
+    public String uploadClassD(String projectId) {
+        return "uploaded Class Diagram";
+    }
+
+    public String uploadUseCaseD(String projectId) {
+        return "uploaded Use Case Diagram";
     }
 
 

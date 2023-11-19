@@ -1,5 +1,6 @@
 package com.example.project.PDS.controllers;
 
+import com.example.project.PDS.DTO.TeamDTO;
 import com.example.project.PDS.DTO.commentDTO;
 import com.example.project.PDS.DTO.projectDTO;
 import com.example.project.PDS.DTO.userDTO;
@@ -46,7 +47,7 @@ public class SupervisorController {
     // view his teams
     @Operation(summary = "View My teams")
     @GetMapping(value ="/{Id}/teams")
-    public List<Team> getSupervisorTeams(@PathVariable String Id){return supervisorService.getMyTeams(Id);}
+    public List<TeamDTO> getSupervisorTeams(@PathVariable String Id){return supervisorService.getMyTeams(Id);}
 
     // view his projects
     @Operation(summary = "View My Projects")

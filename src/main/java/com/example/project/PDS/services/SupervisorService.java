@@ -1,6 +1,7 @@
 package com.example.project.PDS.services;
 
 
+import com.example.project.PDS.DTO.TeamDTO;
 import com.example.project.PDS.DTO.commentDTO;
 import com.example.project.PDS.DTO.projectDTO;
 import com.example.project.PDS.DTO.userDTO;
@@ -74,12 +75,16 @@ public class SupervisorService {
         return stagesService.addComment(stageId,commentDto).getId();
     }
 
-    public List<Team> getMyTeams(String Id) {
+    public List<TeamDTO> getMyTeams(String Id) {
         Supervisor supervisor = getSupervisor(Id);
         List<Project> myProjects = supervisor.getProjects();
-        List<Team> myTeams = new ArrayList<>();
+        List<TeamDTO> myTeams = new ArrayList<>();
         for(Project project : myProjects){
-            myTeams.add(project.getTeam());
+            TeamDTO teamDto = new TeamDTO(
+                    project.getTeam(),
+                    project.getTitle()
+            );
+            myTeams.add(teamDto);
         }
         return myTeams;
     }

@@ -66,12 +66,16 @@ public class StudentService {
     public String leaveProject(String Id, String projectId) {
         Student student = getStudent(Id);
         Project project = projectService.getProject(projectId);
+        if (!student.getProject().getId().equals(projectId))
+            throw new ObjectNotFoundException("Student not enrolled in this project");
 
-        student.getOutTeam();
+        student.setTeam(null);
+        student.setProject(null);
         Team team = project.getTeam();
         team.removeMember(student.getEmail());
         project.setTeam(team);
 
+        studentRepo.save(student);
         projectService.saveProject(project);
         return "student "+ student.getName() + "has left project:" +project.getTitle();
     }

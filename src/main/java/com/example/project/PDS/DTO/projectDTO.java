@@ -9,4 +9,9 @@ public class projectDTO {
     public String title;
     public String description;
     public String timeline;
+    public String teamName;
+
+    public projectDTO() {
+        this.teamName = "MyTeam";
+    }
 }

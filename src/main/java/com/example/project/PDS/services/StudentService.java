@@ -84,10 +84,7 @@ public class StudentService {
         return stagesService.addTask(Id,stageId,taskDto);
     }
 
-    public List<Stage> getStages(String Id){
-        Project myProject = getMyProject(Id);
-        return myProject.getStages();
-    }
+
     public List<Task> getMyTasks(String Id){
         Student student = getStudent(Id);
         List<Stage> myStages = getStages(Id);
@@ -113,11 +110,19 @@ public class StudentService {
 
     public Project getMyProject(String studentId) {
         Student student = getStudent(studentId);
+        if (student.getProject() == null)
+            throw new ObjectNotFoundException("Not enrolled in a project");
         return student.getProject();
+    }
+    public List<Stage> getStages(String Id){
+        Project myProject = getMyProject(Id);
+        return myProject.getStages();
     }
 
     public Team getMyTeam(String studentId) {
         Student student = getStudent(studentId);
+        if (student.getTeam() == null)
+            throw new ObjectNotFoundException("Not enrolled in a project");
         return student.getTeam();
     }
 

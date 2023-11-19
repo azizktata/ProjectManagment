@@ -32,7 +32,7 @@ public class ProjectService {
                 .orElseThrow(() -> new RuntimeException("Supervisor not found"));
 
         Team newTeam = new Team(
-                "myTeam"
+                projectDto.teamName
         );
         Member member = new Member(
                 supervisor.getName(),supervisor.getEmail(),"supervisor"

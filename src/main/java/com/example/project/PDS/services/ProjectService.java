@@ -1,6 +1,7 @@
 package com.example.project.PDS.services;
 
 import com.example.project.PDS.DTO.projectDTO;
+import com.example.project.PDS.Enum.TaskStatus;
 import com.example.project.PDS.Exceptions.ObjectNotFoundException;
 import com.example.project.PDS.models.*;
 import com.example.project.PDS.repository.ProjectRepo;
@@ -142,6 +143,20 @@ public class ProjectService {
 
     public Stage getStage(String stageId) {
         return stagesService.getStage(stageId);
+    }
+
+    public String updateTask(String projectId, String taskId) {
+        List<Stage> stages = getStageByProject(projectId);
+        for (Stage stage : stages){
+            for (Task task : stage.getTasks()){
+                if (task.getId().equals(taskId)){
+                    task.setStatus(TaskStatus.done);
+                    stagesService.saveStage(stage);
+                    return taskId;
+                }
+            }
+        }
+        throw new ObjectNotFoundException("Task not found");
     }
 
 

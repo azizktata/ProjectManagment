@@ -25,6 +25,7 @@ public class Project {
     private String title;
     private String description;
     private String timeline;
+    @JsonIgnore
     private Doccument document;
 
     @DBRef(lazy = false)
@@ -47,6 +48,7 @@ public class Project {
     public void addStage(Stage stage){
         stages.add(stage);
     }
+
 
 
 }

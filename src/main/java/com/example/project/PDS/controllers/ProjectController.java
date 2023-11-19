@@ -40,10 +40,21 @@ public class ProjectController {
     @GetMapping(value ="/{projectId}/stages")
     public List<Stage> getStagesProject(@PathVariable String projectId){return projectService.getStageByProject(projectId);}
 
+    @Operation(summary = "Get Stages by Project Id")
+    @GetMapping(value ="/stages/{stagesId}")
+    public Stage getStage(@PathVariable String stageId){return projectService.getStage(stageId);}
+
+
     //get tasks by stage
     @Operation(summary = "Get Tasks by Stage Id")
     @GetMapping(value ="/stages/{stageId}/tasks")
     public List<Task> getTasksStage(@PathVariable String stageId){return projectService.getTasksByStage(stageId);}
+
+    //get tasks by project
+    @Operation(summary = "Get Tasks by Project Id")
+    @GetMapping(value ="/{projectId}/tasks")
+    public List<Task> getTasksProject(@PathVariable String projectId){return projectService.getTasksByproject(projectId);}
+
 
     @Operation(summary = "Get Comments by Stage Id")
     @GetMapping(value ="/stages/{stageId}/comments")
@@ -74,7 +85,25 @@ public class ProjectController {
 
     }
 
-    // add specification file
-    // add Class diagram file
-    // add Use Case file
+    @Operation(summary = "Delete Stage")
+    @DeleteMapping (value = "/stages/{stageId}")
+    public String deleteStage(@PathVariable String stageId){return stagesService.deleteStage(stageId);}
+
+    // remove task by stageId
+    @Operation(summary = "Remove a task with stageId ")
+    @DeleteMapping(value ="/stages/{stageId}/tasks/{taskId}")
+    public String removeTaskStageById(@PathVariable String stageId,@PathVariable String taskId){return projectService.removeTaskById(stageId,taskId);}
+
+    // remove task by projectId
+    @Operation(summary = "Remove a task with projectId ")
+    @DeleteMapping(value ="/{projectId}/tasks/{taskId}")
+    public String removeTaskProjectById(@PathVariable String projectId,@PathVariable String taskId){return projectService.removeTaskById2(projectId,taskId);}
+
+
+    // Delete a project
+    @Operation(summary = "Delete Project")
+    @DeleteMapping (value = "/{projectId}")
+    public String deleteProject(@PathVariable String projectId){return projectService.deleteProject(projectId);}
+
+
 }

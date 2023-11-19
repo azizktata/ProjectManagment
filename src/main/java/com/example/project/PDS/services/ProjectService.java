@@ -1,6 +1,7 @@
 package com.example.project.PDS.services;
 
 import com.example.project.PDS.DTO.projectDTO;
+import com.example.project.PDS.Exceptions.ObjectNotFoundException;
 import com.example.project.PDS.models.*;
 import com.example.project.PDS.repository.ProjectRepo;
 import com.example.project.PDS.repository.SupervisorRepo;
@@ -13,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -57,27 +59,34 @@ public class ProjectService {
     // View Project
     public Project getProject(String Id){
         return projectRepo.findById(Id)
-                .orElseThrow(() -> new RuntimeException("Project not found"));
+                .orElseThrow(() -> new ObjectNotFoundException("Project not found"));
     }
+
+    public void saveProject(Project project){ projectRepo.save(project);}
 
     public List<Project> getAllProjects(){
         return projectRepo.findAll();
     }
 
-    // View Project stages
-    public List<Stage> getProjectStages(String Id){
-        return projectRepo.findById(Id).get().getStages();
-    }
-
     public List<Stage> getStageByProject(String projectId) {
-        Project project = projectRepo.findById(projectId)
-                .orElseThrow(() -> new RuntimeException("Project not found"));
+        Project project = getProject(projectId);
         return project.getStages();
     }
 
     public List<Task> getTasksByStage(String stageId) {
         return stagesService.getTaskByStage(stageId);
+    }
 
+    // get all tasks, you can add to output stageTitle,..., so it output List<TaskDTO>
+    public List<Task> getTasksByproject(String projectId) {
+        List<Stage> stages = getStageByProject(projectId);
+        List<Task> allTasks = new ArrayList<>();
+        for (Stage stage : stages) {
+            for (Task task : stage.getTasks()) {
+                allTasks.add(task);
+            }
+        }
+        return allTasks;
     }
 
     public List<Comment> getCommentsByStage(String stageId) {
@@ -85,8 +94,7 @@ public class ProjectService {
     }
 
     public String uploadDoc(String projectId, String pdfName, MultipartFile pdf) throws IOException {
-        Project project = projectRepo.findById(projectId)
-                .orElseThrow(() -> new RuntimeException("Project not found"));
+        Project project = getProject(projectId);
         Doccument document = new Doccument();
         document.setTitle(pdfName);
         document.setDoc(new Binary(BsonBinarySubType.BINARY, pdf.getBytes()));
@@ -97,13 +105,47 @@ public class ProjectService {
     }
 
     public Doccument getDocument (String projectId){
-        Project project = projectRepo.findById(projectId)
-                .orElseThrow(() -> new RuntimeException("Project not found"));
+        Project project = getProject(projectId);
         return project.getDocument();
     }
 
+    public String removeTaskById(String stageId, String taskId) {
+        Stage stage = stagesService.getStage(stageId);
+        if (!stage.checkTaskId(taskId))
+            throw new ObjectNotFoundException("Task with Id: "+" " + taskId + " not found in stage " +" "+ stageId);
+
+        stage.removeTaskById(taskId);
+        stagesService.saveStage(stage);
+        return "Taks:" +" "+"'"+ taskId + "'"+" " + "is removed";
+    }
+
+    public String removeTaskById2(String projectId, String taskId) {
+        List<Stage> stages = getStageByProject(projectId);
+        for (Stage stage : stages){
+            for (Task task : stage.getTasks()){
+                if (task.getId().equals(taskId)){
+                    stage.removeTaskById(taskId);
+                    stagesService.saveStage(stage);
+                    return "Taks:" +" "+"'"+ taskId + "'"+" " + "is removed";
+                }
+            }
+        }
+       throw new ObjectNotFoundException("Task not found");
+    }
+
+    public String deleteProject(String projectId) {
+        Project project = getProject(projectId);
+        project.setStages(new ArrayList<>());
+        projectRepo.delete(project);
+        return "Project:" +" "+"'"+ projectId + "'"+" " + "is removed";
+    }
+
+    public Stage getStage(String stageId) {
+        return stagesService.getStage(stageId);
+    }
 
 
+    // get Task by ID
 
     //update a project
 

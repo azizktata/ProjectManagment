@@ -4,6 +4,7 @@ package com.example.project.PDS.services;
 import com.example.project.PDS.DTO.commentDTO;
 import com.example.project.PDS.DTO.projectDTO;
 import com.example.project.PDS.DTO.userDTO;
+import com.example.project.PDS.Exceptions.ObjectNotFoundException;
 import com.example.project.PDS.models.Project;
 import com.example.project.PDS.models.Stage;
 import com.example.project.PDS.models.Supervisor;
@@ -14,7 +15,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
+
 
 @Service
 @AllArgsConstructor
@@ -30,18 +31,20 @@ public class SupervisorService {
         );
         return supervisorRepo.save(supervisor).getId();
     }
+    // get supervisor
+    public Supervisor getSupervisor(String Id){
+        return supervisorRepo.findById(Id)
+                .orElseThrow(() -> new ObjectNotFoundException("Supervisor not found"));
+    }
     // update supervisor
     // delete account
     public String deleteSupervisor(String Id){ //to Modify (delete all entities that he has relation with)
-        Supervisor supervisor = supervisorRepo.findById(Id).get();
+        Supervisor supervisor = getSupervisor(Id);
         supervisorRepo.delete(supervisor);
         return "supervisor "+supervisor.getName()+" is deleted";
     }
 
-    // get supervisor
-    public Supervisor getSupervisor(String Id){
-        return supervisorRepo.findById(Id).get();
-    }
+
 
     public List<Supervisor> getAllSupervisor(){
         return supervisorRepo.findAll();
@@ -58,19 +61,21 @@ public class SupervisorService {
         // view his projects / Teams
         // view project stages / tasks
     public List<Project> getMyProjects (String Id){
-        Supervisor supervisor = supervisorRepo.findById(Id)
-                .orElseThrow(() -> new RuntimeException("Supervisor not found"));
+        Supervisor supervisor = getSupervisor(Id);
         return supervisor.getProjects();
     }
 
+
     // Add comments on each stage
-    public Stage addComment(String stageId, commentDTO commentDto){
-        return stagesService.addComment(stageId,commentDto);
+    public String addComment(String Id,String stageId, commentDTO commentDto){
+        Supervisor supervisor = getSupervisor(Id);
+        if (!supervisor.checkForStage(stageId))
+            throw new ObjectNotFoundException("Stage not found");
+        return stagesService.addComment(stageId,commentDto).getId();
     }
 
     public List<Team> getMyTeams(String Id) {
-        Supervisor supervisor = supervisorRepo.findById(Id)
-                .orElseThrow(() -> new RuntimeException("Supervisor not found"));
+        Supervisor supervisor = getSupervisor(Id);
         List<Project> myProjects = supervisor.getProjects();
         List<Team> myTeams = new ArrayList<>();
         for(Project project : myProjects){
@@ -88,6 +93,22 @@ public class SupervisorService {
         stagesService.saveStage(stage);
         return "Comment:" +" "+"'"+ commentId + "'"+" " + "is removed";
     }
+
+    public String removeProject(String Id,String projectId){
+        Supervisor supervisor = getSupervisor(Id);
+        for (Project project : supervisor.getProjects()){
+            if (project.getId().equals(projectId)){
+                supervisor.removeProject(projectId);
+                supervisorRepo.save(supervisor);
+                projectService.deleteProject(projectId);
+                return "Project:" +" "+"'"+ projectId + "'"+" " + "is removed";
+            }
+        }
+        throw new ObjectNotFoundException("Project not found");
+
+    }
+
+
     // Delete comments
 
     // Query / search / insights

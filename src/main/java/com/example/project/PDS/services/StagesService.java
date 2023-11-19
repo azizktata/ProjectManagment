@@ -3,6 +3,8 @@ package com.example.project.PDS.services;
 import com.example.project.PDS.DTO.commentDTO;
 import com.example.project.PDS.DTO.stageDTO;
 import com.example.project.PDS.DTO.taskDTO;
+import com.example.project.PDS.Exceptions.ListNotRemovedException;
+import com.example.project.PDS.Exceptions.ObjectNotFoundException;
 import com.example.project.PDS.models.*;
 import com.example.project.PDS.repository.ProjectRepo;
 import com.example.project.PDS.repository.StagesRepo;
@@ -10,6 +12,7 @@ import com.example.project.PDS.repository.StudentRepo;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -22,7 +25,7 @@ public class StagesService {
     //Add a stage
     public String createStage(String projectId, stageDTO stageDto){
         Project project = projectRepo.findById(projectId)
-                .orElseThrow(() -> new RuntimeException("project not found"));;
+                .orElseThrow(() -> new ObjectNotFoundException("project not found"));
         Stage newStage = new Stage(
                 stageDto.getTitle()
         );
@@ -35,14 +38,23 @@ public class StagesService {
 
         return stage.getId();
     }
-    //Update a stage
-    //Remove a stage
-    //View a stage
-    public Stage viewStage(String Id){
-        return stagesRepo.findById(Id).get();
+
+    public Stage getStage(String stageId) {
+        return stagesRepo.findById(stageId)
+                .orElseThrow(() -> new ObjectNotFoundException("Stage not found"));
     }
-    //// entering a student ID
-        //Add task to stages
+
+    //Remove a stage
+    public String deleteStage(String stageId){
+        Stage stage = getStage(stageId);
+        if (!stage.getTasks().isEmpty())
+            throw new ListNotRemovedException("Stage Must Be EMPTY");
+        stage.setComments(new ArrayList<>());
+        stagesRepo.delete(stage);
+        return "Stage:" +" "+"'"+ stage.getName() + "'"+" " + "is removed";
+    }
+
+    //Add task to stages
     public String addTask (String studentId, String stageId,taskDTO taskDTO){
         Student student = studentRepo.findById(studentId).get();
         Stage stage = stagesRepo.findById(stageId).get();
@@ -56,36 +68,25 @@ public class StagesService {
     }
 
     public Stage addComment (String stageId, commentDTO commentDto){
-        Stage stage = stagesRepo.findById(stageId).get();
+        Stage stage = getStage(stageId);
         Comment comment = new Comment(commentDto.content);
         stage.addComments(comment);
         return stagesRepo.save(stage);
     }
 
-    public Stage getStage(String stageId) {
-        return stagesRepo.findById(stageId)
-                .orElseThrow(() -> new RuntimeException("Stage not found"));
-    }
     public void saveStage(Stage stage){
         stagesRepo.save(stage);
     }
 
     public List<Task> getTaskByStage(String stageId) {
-        Stage stage = stagesRepo.findById(stageId)
-                .orElseThrow(() -> new RuntimeException("Stage not found"));
+        Stage stage = getStage(stageId);
         return stage.getTasks();
     }
 
     public List<Comment> getCommentByStage(String stageId) {
-        Stage stage = stagesRepo.findById(stageId)
-                .orElseThrow(() -> new RuntimeException("Stage not found"));
+        Stage stage = getStage(stageId);
         return stage.getComments();
     }
-    //Update a task
-        //Delete a task
 
-    //// entering supervisor ID
-        //Add a comment
-        //Delete a comment
 
 }

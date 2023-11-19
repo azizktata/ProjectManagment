@@ -39,14 +39,9 @@ public class SupervisorController {
     public String addProject(@PathVariable String Id,@RequestBody projectDTO projectDto){return supervisorService.AddProject(Id,projectDto);}
 
     // add comment to stage /only a supervisor can add comment
-    @Operation(summary = "Add comment to stage")
-    @PostMapping(value ="/stages/{stageId}/comments")
-    public Stage addComment(@PathVariable String stageId, @RequestBody commentDTO commentDto){return supervisorService.addComment(stageId,commentDto);}
-
-    // Delete comment
-    @Operation(summary = "Delete comment with Id")
-    @DeleteMapping(value ="/stages/{stageId}/comments/{commentId}")
-    public String removeComment(@PathVariable String stageId, @PathVariable String commentId){return supervisorService.removeComment(stageId,commentId);}
+    @Operation(summary = "Add comment to stage / only a supervisor can add comments")
+    @PostMapping(value ="/{supervisorId}/stages/{stageId}/comments")
+    public String addComment(@PathVariable String supervisorId,@PathVariable String stageId, @RequestBody commentDTO commentDto){return supervisorService.addComment(supervisorId,stageId,commentDto);}
 
     // view his teams
     @Operation(summary = "View My teams")
@@ -57,5 +52,14 @@ public class SupervisorController {
     @Operation(summary = "View My Projects")
     @GetMapping(value ="/{Id}/projects")
     public List<Project> getSupervisorProjects(@PathVariable String Id){return supervisorService.getMyProjects(Id);}
+
+    // Delete comment
+    @Operation(summary = "Delete comment with Id")
+    @DeleteMapping(value ="/stages/{stageId}/comments/{commentId}")
+    public String removeComment(@PathVariable String stageId, @PathVariable String commentId){return supervisorService.removeComment(stageId,commentId);}
+
+    @Operation(summary = "Delete project with Id")
+    @DeleteMapping(value ="/{supervisorId}/projects/{projectId}")
+    public String removeProject(@PathVariable String supervisorId, @PathVariable String projectId){return supervisorService.removeProject(supervisorId,projectId);}
 
 }

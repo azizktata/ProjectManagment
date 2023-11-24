@@ -24,7 +24,8 @@ services:
       - ME_CONFIG_MONGODB_SERVER=mongodb
 
   pds:
-    image: pds
+    build: .
+    image: pds-app
     container_name: backend1
     ports:
       - 8080:8080
@@ -32,6 +33,7 @@ services:
       - mongodb
     environment:
       - SPRING_DATA_MONGODB_URI=mongodb://rootuser:rootpass@mongodb:27017/pdsdb?authSource=admin
+
 
 volumes:
   data: {}

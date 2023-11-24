@@ -33,11 +33,11 @@ public class StudentService {
         return studentRepo.findAll();
     }
     // Update a student
-    public String UpdateStudent(String Id, String Name, String Email){
-        Student student = getStudent(Id);
-        student.setName(Name);
-        student.setEmail(Email);
-        return studentRepo.save(student).getId();
+    public String updateStudent(String studentId, userDTO userDto) {
+        Student updatedStd = getStudent(studentId);
+        updatedStd.setEmail(userDto.email);
+        updatedStd.setName(userDto.name);
+        return studentRepo.save(updatedStd).getId();
     }
     // Delete a student
     public String deleteStudent(String Id){
@@ -125,5 +125,6 @@ public class StudentService {
             throw new ObjectNotFoundException("Not enrolled in a project");
         return student.getTeam();
     }
+
 
 }

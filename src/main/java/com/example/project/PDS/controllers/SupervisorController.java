@@ -30,6 +30,11 @@ public class SupervisorController {
     @PostMapping()
     public String addSupervisor(@RequestBody userDTO userDto){return supervisorService.createSupervisor(userDto);}
 
+    @Operation(summary = "Update Supervisor")
+    @PutMapping(value = "/{supervisorId}")
+    public String updateSupervisor(@PathVariable String supervisorId,@RequestBody userDTO userDto){return supervisorService.updateSupervisor(supervisorId,userDto);}
+
+
     @Operation(summary = "Delete Supervisor By Id")
     @DeleteMapping(value ="/{Id}")
     public String removeSupervisor(@PathVariable String Id){return supervisorService.deleteSupervisor(Id);}

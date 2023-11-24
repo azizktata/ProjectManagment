@@ -12,6 +12,7 @@ import java.util.List;
 @AllArgsConstructor
 @RestController
 @RequestMapping(value = "api/v1/students")
+
 public class StudentController {
     private final StudentService studentService;
 
@@ -26,6 +27,10 @@ public class StudentController {
     @Operation(summary = "Add Student")
     @PostMapping()
     public String createStudent(@RequestBody userDTO userDto){return studentService.addStudent(userDto);}
+
+    @Operation(summary = "Update Student")
+    @PutMapping(value = "/{studentId}")
+    public String updateStudent(@PathVariable String studentId,@RequestBody userDTO userDto){return studentService.updateStudent(studentId,userDto);}
 
     @Operation(summary = "Delete a student By Id")
     @DeleteMapping(value ="/{studentId}")

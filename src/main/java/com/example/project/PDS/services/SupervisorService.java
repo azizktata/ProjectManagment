@@ -6,10 +6,7 @@ import com.example.project.PDS.DTO.commentDTO;
 import com.example.project.PDS.DTO.projectDTO;
 import com.example.project.PDS.DTO.userDTO;
 import com.example.project.PDS.Exceptions.ObjectNotFoundException;
-import com.example.project.PDS.models.Project;
-import com.example.project.PDS.models.Stage;
-import com.example.project.PDS.models.Supervisor;
-import com.example.project.PDS.models.Team;
+import com.example.project.PDS.models.*;
 import com.example.project.PDS.repository.SupervisorRepo;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -38,14 +35,19 @@ public class SupervisorService {
                 .orElseThrow(() -> new ObjectNotFoundException("Supervisor not found"));
     }
     // update supervisor
+
+    public String updateSupervisor(String supervisorId, userDTO userDto) {
+        Supervisor updatedSup = getSupervisor(supervisorId);
+        updatedSup.setEmail(userDto.email);
+        updatedSup.setName(userDto.name);
+        return supervisorRepo.save(updatedSup).getId();
+    }
     // delete account
     public String deleteSupervisor(String Id){ //to Modify (delete all entities that he has relation with)
         Supervisor supervisor = getSupervisor(Id);
         supervisorRepo.delete(supervisor);
         return "supervisor "+supervisor.getName()+" is deleted";
     }
-
-
 
     public List<Supervisor> getAllSupervisor(){
         return supervisorRepo.findAll();
@@ -112,6 +114,7 @@ public class SupervisorService {
         throw new ObjectNotFoundException("Project not found");
 
     }
+
 
 
     // Delete comments

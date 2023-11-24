@@ -100,7 +100,7 @@ public class ProjectController {
     public String removeTaskProjectById(@PathVariable String projectId,@PathVariable String taskId){return projectService.removeTaskById2(projectId,taskId);}
 
     @Operation(summary = "Update task state")
-    @DeleteMapping(value ="/{Id}/tasks/{taskId}")
+    @PutMapping(value ="/{Id}/tasks/{taskId}")
     public String updateTaskState(@PathVariable String Id,@PathVariable String taskId){return projectService.updateTask(Id,taskId);}
 
 

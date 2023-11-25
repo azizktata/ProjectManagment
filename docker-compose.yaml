@@ -28,7 +28,7 @@ services:
     image: pds-app
     container_name: backend1
     ports:
-      - 8686:8686
+      - 8181:8181
     depends_on:
       - mongodb
     environment:

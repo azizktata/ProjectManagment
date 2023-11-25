@@ -17,7 +17,7 @@
 		<java.version>17</java.version>
 
 			<!-- SonarQube server configuration -->
-			<sonar.host.url>localhost:9000</sonar.host.url>
+			<sonar.host.url>http://localhost:9000</sonar.host.url>
 			<sonar.login>sqp_dac0ad2e78db4d3c99e5f003247c64cdb6abb19f</sonar.login>
 			<sonar.projectKey>pds</sonar.projectKey>
 			<sonar.projectName>"pds"</sonar.projectName>

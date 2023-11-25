@@ -9,4 +9,4 @@ FROM openjdk:17-jdk-slim As final
 VOLUME /tmp
 COPY --from=build /app/target/*.jar app.jar
 CMD ["java", "-jar", "/app.jar"]
-EXPOSE 8080
+EXPOSE 8181

@@ -39,6 +39,11 @@ public class SupervisorController {
     @DeleteMapping(value ="/{Id}")
     public String removeSupervisor(@PathVariable String Id){return supervisorService.deleteSupervisor(Id);}
 
+    @Operation(summary = "Delete this Supervisor By Name")
+    @DeleteMapping(value ="/{name}")
+    public String removeSupervisorByName(@PathVariable String name){return supervisorService.deleteSupervisorByName(name);}
+
+
     //create project
     @Operation(summary = "Add Project")
     @PostMapping(value ="/{Id}/projects")

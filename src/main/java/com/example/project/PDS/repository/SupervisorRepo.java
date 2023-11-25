@@ -6,4 +6,5 @@ import org.springframework.stereotype.Repository;
 
 
 public interface SupervisorRepo extends MongoRepository <Supervisor, String> {
+    Supervisor findByName(String name);
 }

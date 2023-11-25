@@ -6,4 +6,5 @@ import org.springframework.stereotype.Repository;
 
 
 public interface StudentRepo extends MongoRepository<Student, String> {
+    Student findByName(String name);
 }

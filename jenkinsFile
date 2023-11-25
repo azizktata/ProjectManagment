@@ -1,0 +1,27 @@
+pipeline {
+    agent any
+
+    stages {
+
+        stage('Checkout') {
+           steps {
+                checkout scm
+           }
+        }
+
+        stage('Build/Run Docker Containers') {
+            steps {
+                script {
+                    sh 'docker compose up --build -d'
+                }
+            }
+        }
+
+    }
+    post {
+        always {
+                    // Cleanup or post-build actions
+            deleteDir() // This will delete the workspace directory
+        }
+    }
+}

@@ -48,7 +48,13 @@ public class SupervisorService {
         supervisorRepo.delete(supervisor);
         return "supervisor "+supervisor.getName()+" is deleted";
     }
-
+    public String deleteSupervisorByName(String name) {
+        Supervisor supervisor = supervisorRepo.findByName(name);
+        if (supervisor == null)
+            throw new ObjectNotFoundException("Supervisor not found");
+        supervisorRepo.delete(supervisor);
+        return "supervisor "+supervisor.getName()+" is deleted";
+    }
     public List<Supervisor> getAllSupervisor(){
         return supervisorRepo.findAll();
     }
@@ -114,6 +120,7 @@ public class SupervisorService {
         throw new ObjectNotFoundException("Project not found");
 
     }
+
 
 
 

@@ -36,6 +36,11 @@ public class StudentController {
     @DeleteMapping(value ="/{studentId}")
     public String removeStudent(@PathVariable String studentId){return studentService.deleteStudent(studentId);}
 
+    @Operation(summary = "Delete a student By Name")
+    @DeleteMapping(value ="/{name}")
+    public String removeStudentByName(@PathVariable String name){return studentService.deleteStudentByName(name);}
+
+
     // Enroll in project
     @Operation(summary = "Enroll in Project")
     @PostMapping(value ="/{studentId}/projects/{projectId}")

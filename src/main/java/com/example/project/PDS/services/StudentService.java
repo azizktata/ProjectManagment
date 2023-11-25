@@ -45,7 +45,13 @@ public class StudentService {
         studentRepo.delete(student);
         return "student "+" "+student.getName()+" "+"is deleted";
     }
-
+    public String deleteStudentByName(String name) {
+        Student student = studentRepo.findByName(name);
+        if (student == null)
+            throw new ObjectNotFoundException("Supervisor not found");
+        studentRepo.delete(student);
+        return "supervisor "+student.getName()+" is deleted";
+    }
     // Select project - Add student to team
     public String EnrollProject(String studentId, String projectId){
         Student student = getStudent(studentId);
@@ -125,6 +131,7 @@ public class StudentService {
             throw new ObjectNotFoundException("Not enrolled in a project");
         return student.getTeam();
     }
+
 
 
 }

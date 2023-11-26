@@ -36,7 +36,7 @@ public class SupervisorController {
 
 
     @Operation(summary = "Delete this Supervisor By Id")
-    @DeleteMapping(value ="/{Id}")
+    @DeleteMapping(value ="/ID/{Id}")
     public String removeSupervisor(@PathVariable String Id){return supervisorService.deleteSupervisor(Id);}
 
     @Operation(summary = "Delete this Supervisor By Name")

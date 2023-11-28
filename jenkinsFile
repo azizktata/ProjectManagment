@@ -10,16 +10,6 @@ pipeline {
                 checkout scm
            }
         }
-        stage('SonarQube Scans') {
-            steps {
-                script {
-                    //sh 'docker run -d --restart always --name sonarqube -e SONAR_ES_BOOTSTRAP_CHECKS_DISABLE=true -p 9000:9000 sonarqube:latest'
-                    sh 'docker-compose -f docker-compose-sonar.yml up -d
-'
-                    //sh 'mvn clean verify sonar:sonar'
-                }
-            }
-        }
         stage('run unit tests') {
             steps {
                 script {
@@ -27,6 +17,18 @@ pipeline {
                 }
             }
         }
+        stage('SonarQube Scans') {
+            steps {
+                script {
+                    //sh 'docker run -d --restart always --name sonarqube -e SONAR_ES_BOOTSTRAP_CHECKS_DISABLE=true -p 9000:9000 sonarqube:latest'
+                    sh 'docker rm -f $(docker ps -aq)'
+                    sh 'docker-compose -f docker-compose-sonar.yml up -d
+'
+                    //sh 'mvn clean verify sonar:sonar'
+                }
+            }
+        }
+
         stage('Build/Run Docker Containers') {
             steps {
                 script {

@@ -13,7 +13,9 @@ pipeline {
         stage('SonarQube Scans') {
             steps {
                 script {
-                    sh 'docker run -d --restart always --name sonarqube -e SONAR_ES_BOOTSTRAP_CHECKS_DISABLE=true -p 9000:9000 sonarqube:latest'
+                    //sh 'docker run -d --restart always --name sonarqube -e SONAR_ES_BOOTSTRAP_CHECKS_DISABLE=true -p 9000:9000 sonarqube:latest'
+                    sh 'cd ./Sonar'
+                    sh 'docker compose up -d'
                     sh 'mvn clean verify sonar:sonar'
                 }
             }

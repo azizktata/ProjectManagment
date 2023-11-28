@@ -13,7 +13,7 @@ pipeline {
         stage('run unit tests') {
             steps {
                 script {
-                    sh 'mvn tests'
+                    sh 'mvn test'
                 }
             }
         }

@@ -33,7 +33,7 @@ public class StudentController {
     public String updateStudent(@PathVariable String studentId,@RequestBody userDTO userDto){return studentService.updateStudent(studentId,userDto);}
 
     @Operation(summary = "Delete a student By Id")
-    @DeleteMapping(value ="/{studentId}")
+    @DeleteMapping(value ="/id/{studentId}")
     public String removeStudent(@PathVariable String studentId){return studentService.deleteStudent(studentId);}
 
     @Operation(summary = "Delete a student By Name")

@@ -4,6 +4,7 @@ import com.example.project.PDS.DTO.taskDTO;
 import com.example.project.PDS.DTO.userDTO;
 import com.example.project.PDS.Exceptions.ObjectNotFoundException;
 import com.example.project.PDS.models.*;
+import com.example.project.PDS.repository.ProjectRepo;
 import com.example.project.PDS.repository.StudentRepo;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -15,7 +16,7 @@ import java.util.List;
 @AllArgsConstructor
 public class StudentService {
     private final StudentRepo studentRepo;
-    private final ProjectService projectService;
+    private final ProjectRepo projectRepo;
     private final StagesService stagesService;
 
     // Create a student
@@ -48,14 +49,15 @@ public class StudentService {
     public String deleteStudentByName(String name) {
         Student student = studentRepo.findByName(name);
         if (student == null)
-            throw new ObjectNotFoundException("Supervisor not found");
+            throw new ObjectNotFoundException("Student not found");
         studentRepo.delete(student);
-        return "supervisor "+student.getName()+" is deleted";
+        return "student "+student.getName()+" is deleted";
     }
     // Select project - Add student to team
     public String EnrollProject(String studentId, String projectId){
         Student student = getStudent(studentId);
-        Project project = projectService.getProject(projectId);
+        Project project = projectRepo.findById(projectId)
+                .orElseThrow(() -> new ObjectNotFoundException("Project not found"));
         Team team = project.getTeam();
 
         Member member = new Member(student.getName(),student.getEmail());
@@ -65,13 +67,14 @@ public class StudentService {
         project.setTeam(team);
         student.setProject(project);
         studentRepo.save(student);
-        projectService.saveProject(project);
+        projectRepo.save(project);
         return student.getName() + "Enrolled in project" + project.getTitle();
     }
 
     public String leaveProject(String Id, String projectId) {
         Student student = getStudent(Id);
-        Project project = projectService.getProject(projectId);
+        Project project = projectRepo.findById(projectId)
+                .orElseThrow(() -> new ObjectNotFoundException("Project not found"));
         if (!student.getProject().getId().equals(projectId))
             throw new ObjectNotFoundException("Student not enrolled in this project");
 
@@ -82,7 +85,7 @@ public class StudentService {
         project.setTeam(team);
 
         studentRepo.save(student);
-        projectService.saveProject(project);
+        projectRepo.save(project);
         return "student "+ student.getName() + "has left project:" +project.getTitle();
     }
 

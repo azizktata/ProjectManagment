@@ -13,8 +13,15 @@ pipeline {
         stage('SonarQube Scans') {
             steps {
                 script {
-//                     sh 'docker run -d --name sonarqube -e SONAR_ES_BOOTSTRAP_CHECKS_DISABLE=true -p 9000:9000 sonarqube:latest'
+                    sh 'docker run -d --restart always --name sonarqube -e SONAR_ES_BOOTSTRAP_CHECKS_DISABLE=true -p 9000:9000 sonarqube:latest'
                     sh 'mvn clean verify sonar:sonar'
+                }
+            }
+        }
+        stage('run unit tests') {
+            steps {
+                script {
+                    sh 'mvn tests'
                 }
             }
         }
@@ -22,6 +29,15 @@ pipeline {
             steps {
                 script {
                     sh 'docker compose up --build -d'
+                }
+            }
+        }
+        stage('Push to DockerHub') {
+            steps {
+                script {
+                    sh 'docker login -u aziz77 --password S$azz2000'
+                    sh 'docker tag pds-app:latest aziz77/pds-app:v1.0.0'
+                    sh 'docker push aziz77/pds-app:v1.0.0.0'
                 }
             }
         }

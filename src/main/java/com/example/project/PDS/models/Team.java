@@ -23,10 +23,11 @@ public class Team {
 //    @DBRef
 //    private Supervisor supervisorId;
 
-    private Set<Member> members = new HashSet<>();
+    private List<Member> members = new ArrayList<>();
 
     public Team(String name) {
         this.name = name;
+        this.members = new ArrayList<>();
     }
 
     public void removeMember(String email){

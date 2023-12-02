@@ -65,10 +65,7 @@ public class SupervisorService {
     public String AddProject(String supervisorId, projectDTO project){
         return projectService.createProject(project ,supervisorId);
     }
-    //// View project details
-        // View/download document
-        // view his projects / Teams
-        // view project stages / tasks
+
     public List<Project> getMyProjects (String Id){
         Supervisor supervisor = getSupervisor(Id);
         return supervisor.getProjects();
@@ -121,10 +118,4 @@ public class SupervisorService {
 
     }
 
-
-
-
-    // Delete comments
-
-    // Query / search / insights
 }

@@ -1,6 +1,7 @@
 package com.example.project.PDS.services;
 
 import com.example.project.PDS.DTO.projectDTO;
+import com.example.project.PDS.Enum.DocStatus;
 import com.example.project.PDS.Enum.TaskStatus;
 import com.example.project.PDS.Exceptions.ObjectNotFoundException;
 import com.example.project.PDS.models.*;
@@ -104,6 +105,20 @@ public class ProjectService {
         projectRepo.save(project);
         return document.getId();
     }
+
+    public String manageDoc(String projectId, String code){
+        Project project = getProject(projectId);
+        Doccument doc = project.getDocument();
+        switch(code)
+        {
+            case "A":
+                doc.setDocStatus(DocStatus.Approved);
+            case "D":
+                doc.setDocStatus(DocStatus.Declined);
+        }
+        return projectRepo.save(project).getDocument().getId();
+    }
+
 
     public Doccument getDocument (String projectId){
         Project project = getProject(projectId);

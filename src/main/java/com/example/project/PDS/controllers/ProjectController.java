@@ -85,6 +85,11 @@ public class ProjectController {
 
     }
 
+    @Operation(summary = "Update document state")
+    @PutMapping(value ="/{projectId}/document/{code}")
+    public String validateDoc(@PathVariable String Id,@PathVariable String code){return projectService.manageDoc(Id,code);}
+
+
     @Operation(summary = "Delete Stage")
     @DeleteMapping (value = "/stages/{stageId}")
     public String deleteStage(@PathVariable String stageId){return stagesService.deleteStage(stageId);}

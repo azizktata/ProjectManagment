@@ -1,5 +1,6 @@
 package com.example.project.PDS.models;
 
+import com.example.project.PDS.Enum.DocStatus;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -18,6 +19,7 @@ public class Doccument {
 
     private String title;
     private Binary doc;
+    private DocStatus docStatus = DocStatus.inProcess;
 
     public Doccument() {
         this.Id = UUID.randomUUID().toString();

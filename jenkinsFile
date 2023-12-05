@@ -17,74 +17,75 @@ pipeline {
                 checkout scm
            }
         }
-        stage ("Generate backend image") {
-            steps {
-                 script{
-                    sh "mvn clean install -DskipTests"
-                    sh "docker build -t pds-app ."
-                }
-            }
-        }
-        stage('run unit tests') {
-            steps {
-                script {
-                    sh 'mvn test'
-                }
-            }
-        }
-        stage("Publish to Nexus Repository Manager") {
-            steps {
-                     script {
-                        pom = readMavenPom file: "pom.xml";
-                        filesByGlob = findFiles(glob: "target/*.${pom.packaging}");
-                        echo "${filesByGlob[0].name} ${filesByGlob[0].path} ${filesByGlob[0].directory} ${filesByGlob[0].length} ${filesByGlob[0].lastModified}"
-                        artifactPath = filesByGlob[0].path;
-                        artifactExists = fileExists artifactPath;
-                        if(artifactExists) {
-                            echo "*** File: ${artifactPath}, group: ${pom.groupId}, packaging: ${pom.packaging}, version ${pom.version}";
-                            nexusArtifactUploader(
-                                nexusVersion: NEXUS_VERSION,
-                                protocol: NEXUS_PROTOCOL,
-                                nexusUrl: NEXUS_URL,
-                                groupId: pom.groupId,
-                                version: pom.version,
-                                repository: NEXUS_REPOSITORY,
-                                credentialsId: NEXUS_CREDENTIAL_ID,
-                                artifacts: [
-                                    [artifactId: pom.artifactId,
-                                    classifier: '',
-                                    file: artifactPath,
-                                    type: pom.packaging],
-                                    [artifactId: pom.artifactId,
-                                    classifier: '',
-                                    file: "pom.xml",
-                                    type: "pom"]
-                                ]
-                            );
-                        } else {
-                        error "*** File: ${artifactPath}, could not be found";
-                        }
-                    }
-                }
-        }
-//         stage('SonarQube Scans') {
+//         stage ("Generate backend image") {
 //             steps {
-//                 script {
-//                     //sh 'docker run -d --restart always --name sonarqube -e SONAR_ES_BOOTSTRAP_CHECKS_DISABLE=true -p 9000:9000 sonarqube:latest'
-//                     //sh 'docker rm -f $(docker ps -aq)'
-//                     sh 'docker compose -f docker-compose-sonar.yaml up -d'
-//                     sh 'mvn clean verify sonar:sonar -Dsonar.login=sqp_99872e2e85d8295dcfe078e4e8a42b6265d731fc'
+//                  script{
+//                     sh "mvn clean install -DskipTests"
+//                     sh "docker build -t pds-app ."
 //                 }
 //             }
 //         }
-
-        stage('Run Docker Containers') {
+//         stage('run unit tests') {
+//             steps {
+//                 script {
+//                     sh 'mvn test'
+//                 }
+//             }
+//         }
+//         stage("Publish to Nexus Repository Manager") {
+//             steps {
+//                      script {
+//                         pom = readMavenPom file: "pom.xml";
+//                         filesByGlob = findFiles(glob: "target/*.${pom.packaging}");
+//                         echo "${filesByGlob[0].name} ${filesByGlob[0].path} ${filesByGlob[0].directory} ${filesByGlob[0].length} ${filesByGlob[0].lastModified}"
+//                         artifactPath = filesByGlob[0].path;
+//                         artifactExists = fileExists artifactPath;
+//                         if(artifactExists) {
+//                             echo "*** File: ${artifactPath}, group: ${pom.groupId}, packaging: ${pom.packaging}, version ${pom.version}";
+//                             nexusArtifactUploader(
+//                                 nexusVersion: NEXUS_VERSION,
+//                                 protocol: NEXUS_PROTOCOL,
+//                                 nexusUrl: NEXUS_URL,
+//                                 groupId: pom.groupId,
+//                                 version: pom.version,
+//                                 repository: NEXUS_REPOSITORY,
+//                                 credentialsId: NEXUS_CREDENTIAL_ID,
+//                                 artifacts: [
+//                                     [artifactId: pom.artifactId,
+//                                     classifier: '',
+//                                     file: artifactPath,
+//                                     type: pom.packaging],
+//                                     [artifactId: pom.artifactId,
+//                                     classifier: '',
+//                                     file: "pom.xml",
+//                                     type: "pom"]
+//                                 ]
+//                             );
+//                         } else {
+//                         error "*** File: ${artifactPath}, could not be found";
+//                         }
+//                     }
+//                 }
+//         }
+        stage('SonarQube Scans') {
             steps {
                 script {
-                    sh 'docker compose --env-file ./mongo.env up -d'
+                    //sh 'docker run -d --restart always --name sonarqube -e SONAR_ES_BOOTSTRAP_CHECKS_DISABLE=true -p 9000:9000 sonarqube:latest'
+                    //sh 'docker rm -f $(docker ps -aq)'
+                    sh 'docker compose -f docker-compose-sonar.yaml down -v'
+                    sh 'docker compose -f docker-compose-sonar.yaml up -d'
+//                     sh 'mvn clean verify sonar:sonar -Dsonar.login=sqp_99872e2e85d8295dcfe078e4e8a42b6265d731fc'
                 }
             }
         }
+
+//         stage('Run Docker Containers') {
+//             steps {
+//                 script {
+//                     sh 'docker compose --env-file ./mongo.env up --build -d'
+//                 }
+//             }
+//         }
 //         stage('Push to DockerHub') {
 //             steps {
 //                 script {

@@ -26,9 +26,7 @@ services:
       - ME_CONFIG_MONGODB_SERVER=mongodb
 
   pds:
-    build: .
     image: pds-app
-
     container_name: backend1
     ports:
       - 8181:8181

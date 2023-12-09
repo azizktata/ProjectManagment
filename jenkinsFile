@@ -21,7 +21,6 @@ pipeline {
             steps {
                  script{
                     sh "mvn clean install -DskipTests"
-                    sh "docker build -t pds-app ."
                 }
             }
         }
@@ -72,7 +71,7 @@ pipeline {
                 script {
                     //sh 'docker run -d --restart always --name sonarqube -e SONAR_ES_BOOTSTRAP_CHECKS_DISABLE=true -p 9000:9000 sonarqube:latest'
                     //sh 'docker rm -f $(docker ps -aq)'
-//                     sh 'docker compose -f docker-compose-sonar.yaml down -v'
+                    sh 'docker compose -f docker-compose-sonar.yaml up'
                     sh 'mvn clean verify sonar:sonar'
                 }
             }
@@ -85,15 +84,15 @@ pipeline {
                 }
             }
         }
-//         stage('Push to DockerHub') {
-//             steps {
-//                 script {
+        stage('Push to DockerHub') {
+            steps {
+                script {
 //                     sh 'sudo docker login -u aziz77 --password-stdin passDocker'
 //                     sh 'docker tag pds-app:latest aziz77/pds-app:v1.0.0'
-//                     sh 'docker push aziz77/pds-app:v1.0.0.0'
-//                 }
-//             }
-//         }
+//                     sh 'docker push aziz77/pds-app:v1.0.0'
+                }
+            }
+        }
 
     }
     post {

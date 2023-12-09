@@ -87,9 +87,9 @@ pipeline {
         stage('Push to DockerHub') {
             steps {
                 script {
-//                     sh 'sudo docker login -u aziz77 --password-stdin passDocker'
-//                     sh 'docker tag pds-app:latest aziz77/pds-app:v1.0.0'
-//                     sh 'docker push aziz77/pds-app:v1.0.0'
+
+                    sh 'docker tag pds-app:latest aziz77/pds-app:v1.0.0'
+                    sh 'docker push aziz77/pds-app:v1.0.0'
                 }
             }
         }

@@ -6,7 +6,7 @@ pipeline {
      environment {
              NEXUS_VERSION = "nexus3"
              NEXUS_PROTOCOL = "http"
-             NEXUS_URL = "192.168.50.3:8081"
+             NEXUS_URL = "192.168.1.17:8081"
              NEXUS_REPOSITORY = "maven-nexus-repo"
              NEXUS_CREDENTIAL_ID = "nexus-user-credentials"
          }
@@ -68,11 +68,13 @@ pipeline {
         }
         stage('SonarQube Scans') {
             steps {
-                script {
+                withSonarQubeEnv('sonar-server')
+                    script {
                     //sh 'docker run -d --restart always --name sonarqube -e SONAR_ES_BOOTSTRAP_CHECKS_DISABLE=true -p 9000:9000 sonarqube:latest'
                     //sh 'docker rm -f $(docker ps -aq)'
-                    sh 'docker compose -f docker-compose-sonar.yaml up'
-                    sh 'mvn clean verify sonar:sonar'
+//                     sh 'docker compose -f docker-compose-sonar.yaml up'
+                     sh 'mvn clean verify sonar:sonar'
+                    }
                 }
             }
         }

@@ -10,7 +10,7 @@ pipeline {
              NEXUS_REPOSITORY = "maven-nexus-repo"
              NEXUS_CREDENTIAL_ID = "nexus-user-credentials"
 
-             DOCKERHUB_CREDENTIALS = credentials('dockerhub-id')
+             DOCKERHUB_CREDENTIALS = credentials('dockerhub_id')
          }
     stages {
 

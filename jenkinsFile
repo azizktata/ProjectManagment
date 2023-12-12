@@ -9,6 +9,8 @@ pipeline {
              NEXUS_URL = "10.20.1.8:8081"
              NEXUS_REPOSITORY = "maven-nexus-repo"
              NEXUS_CREDENTIAL_ID = "nexus-user-credentials"
+
+             DOCKERHUB_CREDENTIALS = credentials('dockerhub-id')
          }
     stages {
 
@@ -86,9 +88,9 @@ pipeline {
         stage('Push to DockerHub') {
             steps {
                 script {
-                    sh 'docker login -u aziz77 --password-stdin passDocker.txt'
+                    sh 'echo $DOCKERHUB_CREDENTIALS | docker login -u $DOCKERHUB_CREDENTIALS_USER --password-stdin'
                     sh 'docker tag pds-app:latest aziz77/pds-app:v1.0.0'
-                    sh 'sudo docker push aziz77/pds-app:v1.0.0'
+                    sh 'docker push aziz77/pds-app:v1.0.0'
                 }
             }
         }

@@ -98,7 +98,7 @@ pipeline {
     }
     post {
         always {
-                    // Cleanup or post-build actions
+            sh 'docker logout'
             deleteDir() // This will delete the workspace directory
         }
     }

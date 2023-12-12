@@ -70,8 +70,7 @@ pipeline {
             steps {
                 withSonarQubeEnv('sonar-server') {
                     script {
-
-                     sh 'mvn clean verify sonar:sonar -Dsonar.login=sqb_b9bddc44fba1924f82f1cb41529cad24b83b017f'
+                        sh "mvn sonar:sonar"
                     }
                 }
             }

@@ -73,7 +73,8 @@ pipeline {
                     //sh 'docker run -d --restart always --name sonarqube -e SONAR_ES_BOOTSTRAP_CHECKS_DISABLE=true -p 9000:9000 sonarqube:latest'
                     //sh 'docker rm -f $(docker ps -aq)'
 //                     sh 'docker compose -f docker-compose-sonar.yaml up'
-                     sh 'mvn clean verify sonar:sonar'
+//-Dsonar.login=sqb_b9bddc44fba1924f82f1cb41529cad24b83b017f
+                     sh 'mvn clean verify sonar:sonar '
                     }
                 }
             }

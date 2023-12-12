@@ -19,8 +19,8 @@
 			<!-- SonarQube server configuration -->
 <!--			<sonar.host.url>http://localhost:9000</sonar.host.url>-->
 <!--			<sonar.login>sqp_008cf18146f9134bf715ab8de2b35d734beff64d</sonar.login>-->
-<!--			<sonar.projectKey>pds</sonar.projectKey>-->
-<!--			<sonar.projectName>"pds"</sonar.projectName>-->
+			<sonar.projectKey>pds</sonar.projectKey>
+			<sonar.projectName>"pds"</sonar.projectName>
 
 	</properties>
 

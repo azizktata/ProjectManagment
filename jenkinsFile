@@ -70,7 +70,7 @@ pipeline {
             steps {
                 withSonarQubeEnv('sonar-server') {
                     script {
-                        sh "mvn sonar:sonar -Dsonar.login=sqp_7786218cc88651edfe3ac2ff718d4e3ba49e0e78"
+                        sh "mvn sonar:sonar -Dsonar.token=sqp_7786218cc88651edfe3ac2ff718d4e3ba49e0e78"
                     }
                 }
             }
